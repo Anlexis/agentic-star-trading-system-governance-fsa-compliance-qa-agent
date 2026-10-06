@@ -1,0 +1,15 @@
+# Runtime parameters — loaded by AgentRegistry, passed as Graph(config=...).
+# Separate from config/agent.yaml (the static manifest).
+
+max_retry: 3
+timeout_s: 30
+
+# Retrieval tuning — read by TradingGovernanceWorkflowGraphNode._parent_config()
+# (src/graph/graph.py) and forwarded to the inner DomainWorkflowGraph under
+# config["configurable"]["retrieval"]; RetrieveNode / RerankFilterNode read
+# top_k / score_threshold / kb_path from there (fallback: module defaults
+# mirroring these values).
+retrieval:
+  top_k: 4
+  score_threshold: 0.25
+  kb_path: "config/kb/trading_governance_kb.json"

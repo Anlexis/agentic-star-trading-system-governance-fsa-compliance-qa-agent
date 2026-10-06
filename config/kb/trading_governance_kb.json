@@ -1,0 +1,242 @@
+[
+  {
+    "id": "kb-001",
+    "title": "Independent model validation before deploying a trading AI agent",
+    "category": "ai_mrm",
+    "source": "FSA AI in financial services — model risk management guidance, overview note",
+    "tags": ["mrm", "model", "validation", "review", "deployment", "agent", "ai"],
+    "content": "Before a new AI-driven trading agent is deployed, an independent function separate from the development team must validate the model: confirm the training/reference data is representative, benchmark decision quality against a held-out or historical dataset, and document known limitations. Deployment approval requires a recorded sign-off from the validation function, not from the development team alone.",
+    "extra": {
+      "mrm_items": [
+        {"item_id": "MRM-1", "requirement": "Independent validation function reviews the model before go-live.", "guideline_ref": "FSA AI-MRM overview, model validation"},
+        {"item_id": "MRM-2", "requirement": "Benchmark results and known limitations are recorded before deployment approval.", "guideline_ref": "FSA AI-MRM overview, model validation"}
+      ]
+    }
+  },
+  {
+    "id": "kb-002",
+    "title": "Explainability and decision documentation for AI trading agents",
+    "category": "ai_mrm",
+    "source": "FSA AI in financial services — model risk management guidance, overview note",
+    "tags": ["mrm", "explainability", "documentation", "decision", "agent", "ai"],
+    "content": "Each AI agent that influences a trading decision must produce a decision record explaining the key inputs and rationale in terms a compliance reviewer can audit, even when the underlying model is not fully interpretable. Firms should maintain a model card covering purpose, scope of authority, known failure modes, and the human role that can override the agent's output.",
+    "extra": {
+      "mrm_items": [
+        {"item_id": "MRM-3", "requirement": "Every AI-influenced trading decision has an auditable rationale record.", "guideline_ref": "FSA AI-MRM overview, explainability"},
+        {"item_id": "MRM-4", "requirement": "A model card documents purpose, authority scope, and known failure modes.", "guideline_ref": "FSA AI-MRM overview, explainability"}
+      ]
+    }
+  },
+  {
+    "id": "kb-003",
+    "title": "Ongoing monitoring and drift re-validation for deployed trading agents",
+    "category": "ai_mrm",
+    "source": "FSA AI in financial services — model risk management guidance, overview note",
+    "tags": ["mrm", "monitoring", "drift", "revalidation", "agent", "ai"],
+    "content": "A deployed AI trading agent must be monitored on an ongoing basis for performance drift against its validated baseline. Firms should set drift thresholds that trigger a mandatory re-validation, and re-validate on a fixed periodic cadence regardless of observed drift. A monitoring owner distinct from the agent's operator should review the metrics.",
+    "extra": {
+      "mrm_items": [
+        {"item_id": "MRM-5", "requirement": "Drift thresholds trigger mandatory re-validation of the agent.", "guideline_ref": "FSA AI-MRM overview, ongoing monitoring"},
+        {"item_id": "MRM-6", "requirement": "Periodic re-validation occurs on a fixed cadence independent of observed drift.", "guideline_ref": "FSA AI-MRM overview, ongoing monitoring"}
+      ]
+    }
+  },
+  {
+    "id": "kb-004",
+    "title": "Human oversight and escalation for low-confidence agent output",
+    "category": "ai_mrm",
+    "source": "FSA AI in financial services — model risk management guidance, overview note",
+    "tags": ["mrm", "human", "oversight", "escalation", "confidence", "agent", "ai"],
+    "content": "When a trading agent's own confidence signal falls below a firm-defined floor, or the proposed action falls outside its validated authority scope, the agent must escalate to a human reviewer rather than act autonomously. Firms must define, for each deployed agent, which action classes require prior human approval versus post-hoc human review.",
+    "extra": {
+      "mrm_items": [
+        {"item_id": "MRM-7", "requirement": "Low-confidence or out-of-scope agent proposals escalate to a human reviewer.", "guideline_ref": "FSA AI-MRM overview, human oversight"},
+        {"item_id": "MRM-8", "requirement": "Action classes are pre-classified as prior-approval vs post-hoc-review.", "guideline_ref": "FSA AI-MRM overview, human oversight"}
+      ]
+    }
+  },
+  {
+    "id": "kb-005",
+    "title": "Algorithmic trading registration and pre-trade risk controls",
+    "category": "algo_trading",
+    "source": "金融商品取引法 (Financial Instruments and Exchange Act, FIEA) — algorithmic trading rules, overview note",
+    "tags": ["fiea", "algo", "algorithmic", "trading", "registration", "risk", "pre-trade"],
+    "content": "A firm operating algorithmic trading systems, including AI-driven order generation, must register the activity with the regulator and maintain pre-trade risk controls: price collars around the reference price, maximum order size limits, and a check that rejects an order that would breach the firm's position limits before it reaches the exchange.",
+    "extra": {
+      "circuit_breaker": {
+        "trigger_pct": null,
+        "cooling_off_minutes": null,
+        "market": "all registered algorithmic order flow",
+        "legal_basis": "FIEA algorithmic trading registration and pre-trade risk controls (overview)"
+      }
+    }
+  },
+  {
+    "id": "kb-006",
+    "title": "Circuit breaker and kill-switch controls for automated order flow",
+    "category": "algo_trading",
+    "source": "金融商品取引法 (FIEA) algorithmic trading rules + exchange circuit-breaker rules, overview note",
+    "tags": ["circuit", "breaker", "kill", "switch", "trading", "halt", "cooling-off"],
+    "content": "Automated trading systems must implement a kill switch that a human operator can trigger to halt all outstanding and new orders immediately. Beyond the exchange-wide circuit breaker (which halts trading in an instrument after a large price move within a short window, typically around an 8% reference-price band, followed by a cooling-off period before resumption), firms must maintain their own internal circuit breaker tuned at least as conservatively as the exchange's.",
+    "extra": {
+      "circuit_breaker": {
+        "trigger_pct": 8.0,
+        "cooling_off_minutes": 15,
+        "market": "TSE cash equities (illustrative reference band)",
+        "legal_basis": "Exchange circuit-breaker rules + FIEA algorithmic trading kill-switch requirement (overview)"
+      }
+    }
+  },
+  {
+    "id": "kb-007",
+    "title": "Order-to-trade ratio limits and message throttling",
+    "category": "algo_trading",
+    "source": "金融商品取引法 (FIEA) algorithmic trading rules, overview note",
+    "tags": ["order", "trade", "ratio", "throttle", "message", "rate", "limit"],
+    "content": "Algorithmic and AI-driven order generation must be throttled to stay under a firm-defined order-to-trade ratio and a maximum message rate per second, to prevent a runaway agent from flooding an exchange. Breaching either limit should trip the same internal circuit breaker that governs the price-move trigger, halting further order submission until a human operator clears it.",
+    "extra": {
+      "circuit_breaker": {
+        "trigger_pct": null,
+        "cooling_off_minutes": 15,
+        "market": "all registered algorithmic order flow",
+        "legal_basis": "FIEA algorithmic trading order-to-trade ratio / message-rate throttling (overview)"
+      }
+    }
+  },
+  {
+    "id": "kb-008",
+    "title": "Market manipulation prevention controls for automated strategies",
+    "category": "algo_trading",
+    "source": "金融商品取引法 (FIEA) market manipulation provisions, overview note",
+    "tags": ["market", "manipulation", "spoofing", "layering", "prevention", "automated"],
+    "content": "An automated or AI-driven strategy must not generate order patterns consistent with spoofing or layering (placing orders with no intent to execute, to move the observed price). Firms must run automated surveillance over their own algorithmic flow and be able to demonstrate, on request, that a given agent's strategy was tested against manipulation patterns before deployment.",
+    "extra": {
+      "circuit_breaker": {
+        "trigger_pct": null,
+        "cooling_off_minutes": null,
+        "market": "all registered algorithmic order flow",
+        "legal_basis": "FIEA market manipulation prevention for automated strategies (overview)"
+      }
+    }
+  },
+  {
+    "id": "kb-009",
+    "title": "System risk management and change control for trading systems",
+    "category": "fisc",
+    "source": "FISC安全対策基準 (FISC Security Guidelines) — facility & technology standards, overview note",
+    "tags": ["fisc", "system", "risk", "change", "control", "facility"],
+    "content": "FISC facility and technology standards require a formal change-management process for any production trading system: a documented test plan, a staged rollout, and a rollback procedure verified before go-live. Emergency changes are permitted but must be logged and reviewed retrospectively within a defined window.",
+    "extra": {
+      "fisc_control": {
+        "control_id": "FISC-3-1",
+        "control_title": "System change management for production trading systems",
+        "fisc_chapter": "Facility & Technology standards, system risk management (overview)"
+      }
+    }
+  },
+  {
+    "id": "kb-010",
+    "title": "Access control and privileged operation logging",
+    "category": "fisc",
+    "source": "FISC安全対策基準 (FISC Security Guidelines) — access control standards, overview note",
+    "tags": ["fisc", "access", "control", "privileged", "logging", "authentication"],
+    "content": "FISC access-control standards require least-privilege access to production trading and agent-orchestration systems, multi-factor authentication for privileged accounts, and immutable logging of every privileged operation (configuration change, manual order override, kill-switch activation) with the operator identity attached.",
+    "extra": {
+      "fisc_control": {
+        "control_id": "FISC-4-2",
+        "control_title": "Access control and privileged operation logging",
+        "fisc_chapter": "Facility & Technology standards, access control (overview)"
+      }
+    }
+  },
+  {
+    "id": "kb-011",
+    "title": "Business continuity and contingency planning for trading platforms",
+    "category": "fisc",
+    "source": "FISC安全対策基準 (FISC Security Guidelines) — contingency planning standards, overview note",
+    "tags": ["fisc", "continuity", "contingency", "disaster", "recovery", "failover"],
+    "content": "FISC contingency-planning standards require a documented recovery time objective and recovery point objective for trading platforms, an annually tested failover procedure, and a fallback manual-operation playbook for the period during which automated and AI-driven trading is disabled after an incident.",
+    "extra": {
+      "fisc_control": {
+        "control_id": "FISC-6-1",
+        "control_title": "Business continuity and contingency planning",
+        "fisc_chapter": "Facility & Technology standards, contingency planning (overview)"
+      }
+    }
+  },
+  {
+    "id": "kb-012",
+    "title": "Outsourcing and third-party system risk management",
+    "category": "fisc",
+    "source": "FISC安全対策基準 (FISC Security Guidelines) — outsourcing management standards, overview note",
+    "tags": ["fisc", "outsourcing", "third-party", "vendor", "cloud", "risk"],
+    "content": "When a trading or AI-agent platform component (model hosting, market data feed, order routing) is outsourced, FISC outsourcing-management standards require a documented risk assessment of the vendor, contractual audit rights, and a defined exit / portability plan so the firm is not locked into a vendor that cannot meet its security standard.",
+    "extra": {
+      "fisc_control": {
+        "control_id": "FISC-8-3",
+        "control_title": "Outsourcing and third-party system risk management",
+        "fisc_chapter": "Facility & Technology standards, outsourcing management (overview)"
+      }
+    }
+  },
+  {
+    "id": "kb-013",
+    "title": "Trade order audit log retention requirements",
+    "category": "audit",
+    "source": "金融商品取引法 (FIEA) business operation ledger / record-keeping rules, overview note",
+    "tags": ["audit", "log", "retention", "order", "record", "trail"],
+    "content": "Every order generated by an automated or AI-driven trading agent, including orders that were never sent to market (e.g. blocked by a pre-trade risk control), must be logged with a timestamp, the generating agent's identity, and the input that produced it. FIEA record-keeping rules require these logs to be retained for a period of at least seven years and be reproducible on regulator request.",
+    "extra": {
+      "audit_requirement": {
+        "control": "Trade order audit log retention (including blocked orders)",
+        "retention_years": 7,
+        "legal_basis": "FIEA business operation ledger / record-keeping rules (overview)"
+      }
+    }
+  },
+  {
+    "id": "kb-014",
+    "title": "AI model decision log retention for post-hoc review",
+    "category": "audit",
+    "source": "FSA AI in financial services guidance + FIEA record-keeping rules, overview note",
+    "tags": ["audit", "ai", "decision", "log", "retention", "review"],
+    "content": "In addition to the trade order log, the AI agent's own decision trail (the inputs it considered, the rationale record described under model risk management, and the confidence signal at the time of the decision) must be retained separately so a compliance reviewer can reconstruct why the agent acted, independent of the order log.",
+    "extra": {
+      "audit_requirement": {
+        "control": "AI agent decision-trail retention, separate from the order log",
+        "retention_years": 7,
+        "legal_basis": "FSA AI-MRM guidance + FIEA record-keeping rules (overview)"
+      }
+    }
+  },
+  {
+    "id": "kb-015",
+    "title": "Escalation and incident record-keeping for trading anomalies",
+    "category": "audit",
+    "source": "FISC安全対策基準 (FISC Security Guidelines) + internal incident-management policy, overview note",
+    "tags": ["audit", "escalation", "incident", "anomaly", "record"],
+    "content": "Every circuit-breaker trip, kill-switch activation, or human escalation triggered by an automated or AI-driven trading agent must generate an incident record: the trigger condition, the responding operator, actions taken, and the time to resolution. Incident records feed the periodic internal-audit review described below and must be retrievable on demand.",
+    "extra": {
+      "audit_requirement": {
+        "control": "Circuit-breaker / kill-switch / escalation incident record-keeping",
+        "retention_years": 5,
+        "legal_basis": "FISC contingency & incident-management standards (overview)"
+      }
+    }
+  },
+  {
+    "id": "kb-016",
+    "title": "Internal audit review cadence for multi-agent trading systems",
+    "category": "audit",
+    "source": "Internal audit policy for automated trading, aligned to FSA AI-MRM + FISC guidance, overview note",
+    "tags": ["audit", "review", "cadence", "internal", "multi-agent", "governance"],
+    "content": "Internal audit must review the full set of deployed trading agents at least annually, cross-checking that each agent's model-validation record, circuit-breaker configuration, and incident history are current and consistent with its registered risk classification. Any agent whose review is overdue should be flagged for a governance decision on whether to continue running it.",
+    "extra": {
+      "audit_requirement": {
+        "control": "Annual internal-audit review of every deployed trading agent",
+        "retention_years": 5,
+        "legal_basis": "Internal audit policy, aligned to FSA AI-MRM + FISC guidance (overview)"
+      }
+    }
+  }
+]
